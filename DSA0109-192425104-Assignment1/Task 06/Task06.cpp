@@ -1,0 +1,74 @@
+
+#include <iostream>
+#include <iomanip>
+using namespace std;
+
+enum Zone { Inner, Middle, Outer };
+
+const int BASE_PAISE[] = {1000, 2000, 3000};
+const int SURCHARGE = 20;
+const long long MIN_BALANCE = 5000;
+
+long long fare(Zone z, bool peak)
+{
+    long long f = 0;
+
+    switch (z)
+    {
+        case Inner:
+            f = BASE_PAISE[0];
+            break;
+
+        case Middle:
+            f = BASE_PAISE[1];
+            break;
+
+        case Outer:
+            f = BASE_PAISE[2];
+            break;
+
+        default:
+            return -1;
+    }
+
+    if (peak)
+        f = f + (f * SURCHARGE / 100);
+
+    return f;
+}
+
+bool canTravel(long long balance, long long f)
+{
+    return f >= 0 && balance - f >= MIN_BALANCE;
+}
+
+int main()
+{
+    long long balance = 10000;
+
+    Zone trips[] = {Inner, Outer, Middle};
+    bool peak[] = {false, true, false};
+
+    for (int i = 0; i < 3; i++)
+    {
+        long long f = fare(trips[i], peak[i]);
+
+        if (canTravel(balance, f))
+        {
+            balance = balance - f;
+
+            cout << "Fare Rs " << f / 100 << "."
+                 << setw(2) << setfill('0') << f % 100
+                 << setfill(' ');
+        }
+        else
+        {
+            cout << "Denied (low balance)";
+        }
+
+        cout << " balance Rs " << balance / 100 << '\n';
+    }
+
+    return 0;
+}
+
