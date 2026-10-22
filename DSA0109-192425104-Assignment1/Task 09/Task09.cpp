@@ -1,0 +1,81 @@
+
+#include <iostream>
+#include <iomanip>
+using namespace std;
+
+long long getFare(int zone, int hour)
+{
+    if (zone < 1 || zone > 3 || hour < 0 || hour > 23)
+        return -1;
+
+    long long fare = zone * 1000LL;
+
+    bool peak = (hour >= 8 && hour < 10) ||
+                (hour >= 17 && hour < 20);
+
+    if (peak)
+        fare = fare + fare * 20 / 100;
+
+    return fare;
+}
+
+int main()
+{
+    int zone, hour;
+    long long balance, recharge;
+
+    cout << "Enter zone (1=Inner, 2=Middle, 3=Outer): ";
+    if (!(cin >> zone))
+    {
+        cout << "Invalid zone input\n";
+        return 0;
+    }
+
+    cout << "Enter hour (0-23): ";
+    if (!(cin >> hour))
+    {
+        cout << "Invalid hour input\n";
+        return 0;
+    }
+
+    cout << "Enter balance in paise: ";
+    if (!(cin >> balance) || balance < 0)
+    {
+        cout << "Invalid balance\n";
+        return 0;
+    }
+
+    cout << "Enter recharge in paise: ";
+    if (!(cin >> recharge) || recharge < 0)
+    {
+        cout << "Invalid recharge\n";
+        return 0;
+    }
+
+    if (zone < 1 || zone > 3 || hour < 0 || hour > 23)
+    {
+        cout << "Invalid zone or hour\n";
+        return 0;
+    }
+
+    balance = balance + recharge;
+    long long fare = getFare(zone, hour);
+
+    if (balance - fare >= 5000)
+    {
+        balance = balance - fare;
+        cout << fixed << setprecision(2);
+        cout << "Fare: Rs " << fare / 100.0 << '\n';
+        cout << "Journey approved\n";
+    }
+    else
+    {
+        cout << "Journey denied\n";
+    }
+
+    cout << fixed << setprecision(2);
+    cout << "Final balance: Rs " << balance / 100.0 << '\n';
+
+    return 0;
+}
+
